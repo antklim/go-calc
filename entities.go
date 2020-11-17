@@ -6,6 +6,22 @@ type Request struct {
 	Operands  []float64 `json:"operands"`
 }
 
+func (r *Request) Validate() error {
+	// if r.Operation == Unknown {
+	// 	return errors.New("unknown operation")
+	// }
+
+	// if r.Operands == nil {
+	// 	return errors.New("operands list cannot be empty")
+	// }
+
+	// if len(r.Operands) < 1 {
+
+	// }
+
+	return nil
+}
+
 // Response describes service response data structure.
 type Response struct {
 	Operation string    `json:"operation"`
