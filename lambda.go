@@ -3,46 +3,41 @@ package calc
 import "math"
 
 type Lambda func(arg float64) float64
-type LambdaHandler func(arg float64) Lambda
+type Handler func(arg float64) Lambda
 
-var LambdaHandlers = map[string]LambdaHandler{
-	"add":  Add,
-	"sub":  Sub,
-	"mul":  Mul,
-	"div":  Div,
-	"sqrt": Sqrt,
+var OperationHandlers = map[Operation]Handler{
+	Add:  add,
+	Sub:  sub,
+	Mul:  mul,
+	Div:  div,
+	Sqrt: sqrt,
 }
 
-// Add implements addition.
-func Add(a float64) Lambda {
+func add(a float64) Lambda {
 	return func(b float64) float64 {
 		return a + b
 	}
 }
 
-// Mul implements multiplication.
-func Mul(a float64) Lambda {
+func mul(a float64) Lambda {
 	return func(b float64) float64 {
 		return a * b
 	}
 }
 
-// Sub implements subtraction.
-func Sub(a float64) Lambda {
+func sub(a float64) Lambda {
 	return func(b float64) float64 {
 		return a - b
 	}
 }
 
-// Div implements division.
-func Div(a float64) Lambda {
+func div(a float64) Lambda {
 	return func(b float64) float64 {
 		return a / b
 	}
 }
 
-// Sqrt implements square root.
-func Sqrt(a float64) Lambda {
+func sqrt(a float64) Lambda {
 	return func(_ float64) float64 {
 		return math.Sqrt(a)
 	}
