@@ -1,5 +1,7 @@
 package calc
 
+// Operation is a structure that contains lamda to calculate operation value and
+// arguments validation.
 type Operation struct {
 	lambda     Lambda
 	validation Validation
@@ -30,6 +32,7 @@ var sqrt = Operation{
 	validation: SqrtValidation,
 }
 
+// Operations supported operations list.
 var Operations = map[string]Operation{
 	"add":  add,
 	"sub":  sub,

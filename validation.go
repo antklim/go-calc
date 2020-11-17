@@ -2,6 +2,7 @@ package calc
 
 import "errors"
 
+// Validation describes operation validation rules.
 type Validation func(args ...float64) error
 
 func commonValidation(args ...float64) error {
@@ -36,10 +37,16 @@ func minTwoOperandsValidation(args ...float64) error {
 	return nil
 }
 
+// AddValidation addition arguments validation rules.
 var AddValidation Validation = minTwoOperandsValidation
+
+// SubValidation subtraction arguments validation rules.
 var SubValidation Validation = minTwoOperandsValidation
+
+// MulValidation multiplication arguments validation rules.
 var MulValidation Validation = minTwoOperandsValidation
 
+// DivValidation division arguments validation rules.
 func DivValidation(args ...float64) error {
 	if err := minTwoOperandsValidation(args...); err != nil {
 		return err
@@ -52,6 +59,7 @@ func DivValidation(args ...float64) error {
 	return nil
 }
 
+// SqrtValidation square root arguments validation rules.
 func SqrtValidation(args ...float64) error {
 	if err := minOneOperandValidation(args...); err != nil {
 		return err
