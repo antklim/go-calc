@@ -13,14 +13,12 @@ func DoHandler() http.HandlerFunc {
 			return
 		}
 
-		if err := req.Validate(); err != nil {
+		res, err := DoUseCase(*req)
+		if err != nil {
 			fmt.Fprintf(w, "error %v\n", err)
 			return
 		}
 
-		operation := Operations[req.Operation]
-		result := Do(operation.lambda, req.Arguments)
-
-		fmt.Fprintf(w, "This is result of Do handler %.5f\n", result)
+		fmt.Fprintf(w, "This is result of Do handler %.5f\n", res.Result)
 	})
 }
