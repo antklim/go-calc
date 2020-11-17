@@ -135,11 +135,11 @@ func TestValidations(t *testing.T) {
 			},
 		},
 		{
-			desc:       "square root validation returns error when operand is negative",
+			desc:       "square root validation returns error when argument is negative",
 			args:       []float64{-1},
 			validation: calc.SqrtValidation,
 			assert: func(t *testing.T, err error) {
-				assert.EqualError(t, err, "square root operand cannot be negative")
+				assert.EqualError(t, err, "square root argument cannot be negative")
 			},
 		},
 		{
@@ -153,7 +153,7 @@ func TestValidations(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			err := tC.validation(tC.args...)
+			err := tC.validation(tC.args)
 			tC.assert(t, err)
 		})
 	}

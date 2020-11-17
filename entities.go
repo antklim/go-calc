@@ -1,31 +1,46 @@
 package calc
 
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+)
+
 // Request describes service request data structure.
 type Request struct {
 	Operation string    `json:"operation"`
-	Operands  []float64 `json:"operands"`
+	Arguments []float64 `json:"arguments"`
 }
 
+func UnmarshalRequest(r io.Reader) (*Request, error) {
+	body, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+
+	var req Request
+	if err := json.Unmarshal(body, &req); err != nil {
+		return nil, err
+	}
+
+	return &req, nil
+}
+
+// Validate ...
 func (r *Request) Validate() error {
-	// if r.Operation == Unknown {
-	// 	return errors.New("unknown operation")
-	// }
+	operation, ok := Operations[r.Operation]
+	if !ok {
+		return fmt.Errorf("unsupported operation %s", r.Operation)
+	}
 
-	// if r.Operands == nil {
-	// 	return errors.New("operands list cannot be empty")
-	// }
-
-	// if len(r.Operands) < 1 {
-
-	// }
-
-	return nil
+	return operation.validation(r.Arguments)
 }
 
 // Response describes service response data structure.
 type Response struct {
 	Operation string    `json:"operation"`
-	Operands  []float64 `json:"operands"`
+	Arguments []float64 `json:"arguments"`
 	Result    float64   `json:"result"`
 }
 

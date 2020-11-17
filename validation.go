@@ -3,9 +3,9 @@ package calc
 import "errors"
 
 // Validation describes operation validation rules.
-type Validation func(args ...float64) error
+type Validation func(args []float64) error
 
-func commonValidation(args ...float64) error {
+func commonValidation(args []float64) error {
 	if args == nil {
 		return errors.New("arguments list cannot be nil")
 	}
@@ -13,8 +13,8 @@ func commonValidation(args ...float64) error {
 	return nil
 }
 
-func minOneOperandValidation(args ...float64) error {
-	if err := commonValidation(args...); err != nil {
+func minOneArgumentValidation(args []float64) error {
+	if err := commonValidation(args); err != nil {
 		return err
 	}
 
@@ -25,8 +25,8 @@ func minOneOperandValidation(args ...float64) error {
 	return nil
 }
 
-func minTwoOperandsValidation(args ...float64) error {
-	if err := commonValidation(args...); err != nil {
+func minTwoArgumentsValidation(args []float64) error {
+	if err := commonValidation(args); err != nil {
 		return err
 	}
 
@@ -38,17 +38,17 @@ func minTwoOperandsValidation(args ...float64) error {
 }
 
 // AddValidation addition arguments validation rules.
-var AddValidation Validation = minTwoOperandsValidation
+var AddValidation Validation = minTwoArgumentsValidation
 
 // SubValidation subtraction arguments validation rules.
-var SubValidation Validation = minTwoOperandsValidation
+var SubValidation Validation = minTwoArgumentsValidation
 
 // MulValidation multiplication arguments validation rules.
-var MulValidation Validation = minTwoOperandsValidation
+var MulValidation Validation = minTwoArgumentsValidation
 
 // DivValidation division arguments validation rules.
-func DivValidation(args ...float64) error {
-	if err := minTwoOperandsValidation(args...); err != nil {
+func DivValidation(args []float64) error {
+	if err := minTwoArgumentsValidation(args); err != nil {
 		return err
 	}
 
@@ -60,13 +60,13 @@ func DivValidation(args ...float64) error {
 }
 
 // SqrtValidation square root arguments validation rules.
-func SqrtValidation(args ...float64) error {
-	if err := minOneOperandValidation(args...); err != nil {
+func SqrtValidation(args []float64) error {
+	if err := minOneArgumentValidation(args); err != nil {
 		return err
 	}
 
 	if args[0] < 0 {
-		return errors.New("square root operand cannot be negative")
+		return errors.New("square root argument cannot be negative")
 	}
 
 	return nil
