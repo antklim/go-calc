@@ -1,0 +1,376 @@
+{
+	"info": {
+		"_postman_id": "0011b2cf-36cc-4a45-b905-f1bef8560862",
+		"name": "GO-CALC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea152d64-a4b0-4260-96a6-63c76ad7a02a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Add result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({operation: \"add\", arguments: [1, 2], result: 3});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"add\",\n    \"arguments\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Calculate arguments addition"
+			},
+			"response": []
+		},
+		{
+			"name": "Sub",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a48f875-e38e-43a6-b323-3422fdb1a881",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Sub result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({operation: \"sub\", arguments: [1, 2], result: -1});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"sub\",\n    \"arguments\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Calculate arguments subtraction"
+			},
+			"response": []
+		},
+		{
+			"name": "Mul",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46f5b9f8-c38e-4ad4-bb0f-abb34657da0f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Mul result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({operation: \"mul\", arguments: [1, 2], result: 2});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"mul\",\n    \"arguments\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Calculate arguments multiplication"
+			},
+			"response": []
+		},
+		{
+			"name": "Div",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a3e1d0a8-0c04-4c20-be95-821f3a529bf0",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Div result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({operation: \"div\", arguments: [1, 2], result: 0.5});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"div\",\n    \"arguments\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Calculate arguments division"
+			},
+			"response": []
+		},
+		{
+			"name": "Sqrt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45b758b8-48b6-450a-a5a8-b4721f68d8df",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Sqrt result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({operation: \"sqrt\", arguments: [25], result: 5});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"sqrt\",\n    \"arguments\": [25]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Calculate argument square root"
+			},
+			"response": []
+		},
+		{
+			"name": "Corrupted payload",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26ba2be4-0888-402a-8bca-c1699ba91a8f",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Add result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({message: \"parsing JSON failed\"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Return 400 when payload is corrupted"
+			},
+			"response": []
+		},
+		{
+			"name": "Unsupported operation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07dbedae-5d96-42dc-866a-aefb8677dced",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Add result is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({message: \"unsupported operation ''\"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/do",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"do"
+					]
+				},
+				"description": "Return 422 when payload is not valid"
+			},
+			"response": []
+		},
+		{
+			"name": "NotFound",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebafa4f9-5c56-4693-812a-482390fe8f5f",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Not found message is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({message: \"not found\"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/not-found",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"not-found"
+					]
+				},
+				"description": "Not found scenario"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "178d00a2-2ca8-40d9-91ed-cd1726319540",
+			"key": "base_url",
+			"value": "http://localhost:8080"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

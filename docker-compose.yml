@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  calc:
+    build: .
+    networks:
+      - calc-nw
+    ports:
+      - "${CALC_PORT:-8080}:8080"
+
+networks:
+  calc-nw:

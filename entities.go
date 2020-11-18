@@ -12,7 +12,7 @@ type Request struct {
 func (r *Request) Validate() error {
 	operation, ok := Operations[r.Operation]
 	if !ok {
-		return fmt.Errorf("unsupported operation %s", r.Operation)
+		return fmt.Errorf("unsupported operation '%s'", r.Operation)
 	}
 
 	return operation.validation(r.Arguments)
