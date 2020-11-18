@@ -17,7 +17,7 @@ func TestRequestValidation(t *testing.T) {
 			desc: "returns error when unsupported operation provided",
 			req:  calc.Request{Operation: "foo"},
 			assert: func(t *testing.T, err error) {
-				assert.EqualError(t, err, "unsupported operation foo")
+				assert.EqualError(t, err, "unsupported operation 'foo'")
 			},
 		},
 		{
