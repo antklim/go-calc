@@ -3,9 +3,8 @@ package calc_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/antklim/go-calc"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRequestValidation(t *testing.T) {

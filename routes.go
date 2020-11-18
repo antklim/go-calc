@@ -9,9 +9,12 @@ import (
 )
 
 // Routes available in calc service.
-var Routes = map[string]http.HandlerFunc{
-	"/do": doHandler(),
-	"/":   notFoundHandler,
+func Routes(client HTTPClient) map[string]http.HandlerFunc {
+	return map[string]http.HandlerFunc{
+		"/do":     doHandler(),
+		"/remote": remoteHandler(client),
+		"/":       notFoundHandler,
+	}
 }
 
 var (
@@ -29,12 +32,14 @@ func doHandler() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var req Request
 		if err := unmarshalBody(r, &req); err != nil {
+			log.Println(err)
 			response := NewErrorResponse(err)
 			writeBody(w, r, response, http.StatusBadRequest)
 			return
 		}
 
 		if err := req.Validate(); err != nil {
+			log.Println(err)
 			response := NewErrorResponse(err)
 			writeBody(w, r, response, http.StatusUnprocessableEntity)
 			return
@@ -50,6 +55,42 @@ func doHandler() http.HandlerFunc {
 		}
 
 		writeBody(w, r, response, http.StatusOK)
+	})
+}
+
+func remoteHandler(client HTTPClient) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		url := r.URL.Query().Get("url")
+		if url == "" {
+			url = "http://example.com/"
+		}
+
+		req, err := http.NewRequest(http.MethodPost, url, r.Body)
+		if err != nil {
+			log.Println(err)
+			response := NewErrorResponse(err)
+			writeBody(w, r, response, http.StatusInternalServerError)
+			return
+		}
+
+		res, err := client.Do(req)
+		if err != nil {
+			log.Println(err)
+			response := NewErrorResponse(err)
+			writeBody(w, r, response, http.StatusInternalServerError)
+			return
+		}
+		defer res.Body.Close()
+
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			log.Println(err)
+			response := NewErrorResponse(err)
+			writeBody(w, r, response, http.StatusInternalServerError)
+			return
+		}
+
+		writeRawBody(w, req, body, http.StatusOK)
 	})
 }
 

@@ -9,8 +9,9 @@ import (
 // Start launches calc service.
 func Start(address string) error {
 	mux := http.NewServeMux()
+	client := NewHTTPClient()
 
-	for route, handler := range Routes {
+	for route, handler := range Routes(client) {
 		mux.Handle(route, handler)
 	}
 

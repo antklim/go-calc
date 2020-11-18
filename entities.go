@@ -1,8 +1,6 @@
 package calc
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // Request describes service request data structure.
 type Request struct {
