@@ -2,10 +2,15 @@ package calc
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/mock"
+
+	"github.com/antklim/go-calc/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -46,7 +51,26 @@ func TestDoHandler(t *testing.T) {
 }
 
 func TestRemoteHandlerWithClientMock(t *testing.T) {
-	// TODO: add implementation
+	res := &http.Response{
+		StatusCode: http.StatusOK,
+		Body:       ioutil.NopCloser(strings.NewReader(`{"foo": "bar"}`)),
+	}
+	clientMock := mocks.HTTPClient{}
+	clientMock.On("Do", mock.Anything, mock.Anything).Return(res, nil)
+
+	req, err := http.NewRequest("GET", "/remote", nil)
+	if err != nil {
+		require.NoError(t, err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(remoteHandler(&clientMock))
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+
+	resBody := `{"foo": "bar"}`
+	assert.JSONEq(t, resBody, rr.Body.String())
 }
 
 func TestRemoteHandlerWithStubServer(t *testing.T) {
@@ -57,7 +81,6 @@ func TestRemoteHandlerWithStubServer(t *testing.T) {
 	defer ts.Close()
 
 	url := fmt.Sprintf("/remote?url=%s", ts.URL)
-	fmt.Println(url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		require.NoError(t, err)
