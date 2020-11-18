@@ -11,14 +11,19 @@ import (
 // Routes available in calc service.
 var Routes = map[string]http.HandlerFunc{
 	"/do": doHandler(),
-	"/":   http.NotFound,
+	"/":   notFoundHandler,
 }
 
 var (
-	errReadBody  = errors.New("body read failed")
-	errParseBody = errors.New("parsing JSON failed")
-	serverError  = []byte(`{"message": "internal server error"}`)
+	errReadBody         = errors.New("body read failed")
+	errParseBody        = errors.New("parsing JSON failed")
+	serverErrorResponse = []byte(`{"message": "internal server error"}`)
+	notFoundResponse    = []byte(`{"message": "not found"}`)
 )
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	writeRawBody(w, r, notFoundResponse, http.StatusNotFound)
+}
 
 func doHandler() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -68,10 +73,14 @@ func writeBody(w http.ResponseWriter, req *http.Request, response interface{}, s
 	body, err := json.Marshal(response)
 	if err != nil {
 		log.Println(err)
-		body = serverError
+		body = serverErrorResponse
 		status = http.StatusInternalServerError
 	}
 
+	writeRawBody(w, req, body, status)
+}
+
+func writeRawBody(w http.ResponseWriter, req *http.Request, body []byte, status int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(append(body, byte('\n')))
