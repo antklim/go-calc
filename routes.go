@@ -9,6 +9,13 @@ import (
 	"net/http"
 )
 
+var (
+	errReadBody         = errors.New("body read failed")
+	errParseBody        = errors.New("parsing JSON failed")
+	serverErrorResponse = []byte(`{"message": "internal server error"}`)
+	notFoundResponse    = []byte(`{"message": "not found"}`)
+)
+
 // Routes available in calc service.
 func Routes(client HTTPClient) map[string]http.HandlerFunc {
 	return map[string]http.HandlerFunc{
@@ -17,13 +24,6 @@ func Routes(client HTTPClient) map[string]http.HandlerFunc {
 		"/":       notFoundHandler,
 	}
 }
-
-var (
-	errReadBody         = errors.New("body read failed")
-	errParseBody        = errors.New("parsing JSON failed")
-	serverErrorResponse = []byte(`{"message": "internal server error"}`)
-	notFoundResponse    = []byte(`{"message": "not found"}`)
-)
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	writeRawBody(w, r, notFoundResponse, http.StatusNotFound)

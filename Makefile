@@ -8,16 +8,7 @@ clean: go-clean ## Clean build cache and dependencies
 gen-mocks: go-gen-mocks ## Generate mocks, requires mockery to be installed (https://github.com/vektra/mockery)
 
 .PHONY: unit-test
-unit-test: ## Run unit tests
-	@$(MAKE) go-unit-test
-
-# .PHONY: integration-test
-# integration-test: ## Run integration tests
-# 	@$(MAKE) services-down
-# 	@$(MAKE) services-build
-# 	@$(MAKE) services-up
-# 	@$(MAKE) go-integration-test
-# 	@$(MAKE) services-down
+unit-test: go-unit-test ## Run unit tests
 
 .PHONY: help
 help:
@@ -51,10 +42,6 @@ go-deps:
 go-unit-test:
 	@echo "Running unit tests..."
 	go test -v
-
-# go-integration-test:
-# 	@echo "Running integration tests..."
-# 	go test -v -tags="integration" -p=1 ./...
 
 go-gen-mocks:
 	@echo "Generating mocks..."
