@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "newman run postman_collection.json"
   },
   "keywords": [],
   "author": "Anton Klimenko <antklim@gmail.com>",
