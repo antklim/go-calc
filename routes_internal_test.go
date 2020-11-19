@@ -8,16 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/mock"
-
 	"github.com/antklim/go-calc/mocks"
-
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
-
-// 1. TestNotFoundHandler - test using handler.
-// 2. TestDoHandler - test using handler.
 
 func TestNotFoundHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/not-found", nil)
