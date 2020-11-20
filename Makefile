@@ -7,8 +7,8 @@ clean: go-clean ## Clean build cache and dependencies
 .PHONY: gen-mocks
 gen-mocks: go-gen-mocks ## Generate mocks, requires mockery to be installed (https://github.com/vektra/mockery)
 
-.PHONY: unit-test
-unit-test: go-unit-test ## Run unit tests
+.PHONY: test
+test: go-test ## Run tests
 
 .PHONY: help
 help:
@@ -39,8 +39,8 @@ go-deps:
 	@echo "Installing dependencies..."
 	go mod download
 
-go-unit-test:
-	@echo "Running unit tests..."
+go-test:
+	@echo "Running tests..."
 	go test -v
 
 go-gen-mocks:

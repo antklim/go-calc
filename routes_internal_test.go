@@ -15,11 +15,7 @@ import (
 )
 
 func TestNotFoundHandler(t *testing.T) {
-	req, err := http.NewRequest("GET", "/not-found", nil)
-	if err != nil {
-		require.NoError(t, err)
-	}
-
+	req := httptest.NewRequest("GET", "/not-found", nil)
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(notFoundHandler)
 	handler.ServeHTTP(rr, req)
@@ -30,11 +26,7 @@ func TestNotFoundHandler(t *testing.T) {
 
 func TestDoHandler(t *testing.T) {
 	reqBody := `{"operation": "add", "arguments": [1,2]}`
-	req, err := http.NewRequest("POST", "/do", strings.NewReader(reqBody))
-	if err != nil {
-		require.NoError(t, err)
-	}
-
+	req := httptest.NewRequest("POST", "/do", strings.NewReader(reqBody))
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(doHandler())
 	handler.ServeHTTP(rr, req)
