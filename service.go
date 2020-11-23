@@ -7,11 +7,10 @@ import (
 )
 
 // Start launches calc service.
-func Start(address string) error {
+func Start(address string, routes map[string]http.HandlerFunc) error {
 	mux := http.NewServeMux()
-	client := NewHTTPClient()
 
-	for route, handler := range Routes(client) {
+	for route, handler := range routes {
 		mux.Handle(route, handler)
 	}
 

@@ -11,72 +11,65 @@ import (
 	"github.com/antklim/go-calc/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 )
 
 func TestNotFoundHandler(t *testing.T) {
 	req := httptest.NewRequest("GET", "/not-found", nil)
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(notFoundHandler)
-	handler.ServeHTTP(rr, req)
 
-	assert.Equal(t, http.StatusNotFound, rr.Code)
-	assert.JSONEq(t, `{"message": "not found"}`, rr.Body.String())
+	notFoundHandler(rr, req)
+	res := rr.Result()
+	resBody, _ := ioutil.ReadAll(res.Body)
+
+	assert.Equal(t, http.StatusNotFound, res.StatusCode)
+	assert.JSONEq(t, `{"message": "not found"}`, string(resBody))
 }
 
 func TestDoHandler(t *testing.T) {
-	reqBody := `{"operation": "add", "arguments": [1,2]}`
-	req := httptest.NewRequest("POST", "/do", strings.NewReader(reqBody))
+	req := httptest.NewRequest("POST", "/do", strings.NewReader(`{"operation": "add", "arguments": [1,2]}`))
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(doHandler())
-	handler.ServeHTTP(rr, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
+	doHandler()(rr, req)
+	res := rr.Result()
+	resBody, _ := ioutil.ReadAll(res.Body)
 
-	resBody := `{"operation": "add", "arguments": [1,2], "result": 3}`
-	assert.JSONEq(t, resBody, rr.Body.String())
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	assert.JSONEq(t, `{"operation": "add", "arguments": [1,2], "result": 3}`, string(resBody))
 }
 
 func TestRemoteHandlerWithClientMock(t *testing.T) {
-	res := &http.Response{
+	mockRes := &http.Response{
 		StatusCode: http.StatusOK,
 		Body:       ioutil.NopCloser(strings.NewReader(`{"foo": "bar"}`)),
 	}
 	clientMock := mocks.HTTPClient{}
-	clientMock.On("Do", mock.Anything, mock.Anything).Return(res, nil)
+	clientMock.On("Do", mock.Anything, mock.Anything).Return(mockRes, nil)
 
-	req, err := http.NewRequest("GET", "/remote", nil)
-	if err != nil {
-		require.NoError(t, err)
-	}
-
+	req := httptest.NewRequest("GET", "/remote", nil)
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(remoteHandler(&clientMock))
-	handler.ServeHTTP(rr, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
+	remoteHandler(&clientMock)(rr, req)
+	res := rr.Result()
+	resBody, _ := ioutil.ReadAll(res.Body)
 
-	resBody := `{"foo": "bar"}`
-	assert.JSONEq(t, resBody, rr.Body.String())
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	assert.JSONEq(t, `{"foo": "bar"}`, string(resBody))
 }
 
 func TestRemoteHandlerWithStubServer(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}))
-
 	defer ts.Close()
 
 	url := fmt.Sprintf("/remote?url=%s", ts.URL)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		require.NoError(t, err)
-	}
-
+	req := httptest.NewRequest("GET", url, nil)
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(remoteHandler(&http.Client{}))
-	handler.ServeHTTP(rr, req)
 
-	assert.Equal(t, http.StatusInternalServerError, rr.Code)
-	assert.JSONEq(t, `{"message": "remote call failed, returned status code 503"}`, rr.Body.String())
+	remoteHandler(&http.Client{})(rr, req)
+	res := rr.Result()
+	resBody, _ := ioutil.ReadAll(res.Body)
+
+	assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
+	assert.JSONEq(t, `{"message": "remote call failed, returned status code 503"}`, string(resBody))
 }
