@@ -43,7 +43,7 @@ func TestRemoteHandlerWithClientMock(t *testing.T) {
 		Body:       ioutil.NopCloser(strings.NewReader(`{"foo": "bar"}`)),
 	}
 	clientMock := mocks.HTTPClient{}
-	clientMock.On("Do", mock.Anything, mock.Anything).Return(mockRes, nil)
+	clientMock.On("Do", mock.AnythingOfType("*http.Request")).Return(mockRes, nil)
 
 	req := httptest.NewRequest("GET", "/remote", nil)
 	rr := httptest.NewRecorder()
