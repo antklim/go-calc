@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/antklim/go-calc/mocks"
 	"github.com/stretchr/testify/assert"
@@ -72,4 +73,23 @@ func TestRemoteHandlerWithStubServer(t *testing.T) {
 
 	assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
 	assert.JSONEq(t, `{"message": "remote call failed, returned status code 503"}`, string(resBody))
+}
+
+func TestRemoteHandlerWithDelayResponse(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(200 * time.Millisecond)
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}))
+	defer ts.Close()
+
+	url := fmt.Sprintf("/remote?url=%s", ts.URL)
+	req := httptest.NewRequest("GET", url, nil)
+	rr := httptest.NewRecorder()
+
+	remoteHandler(&http.Client{Timeout: 100 * time.Millisecond})(rr, req)
+	res := rr.Result()
+	resBody, _ := ioutil.ReadAll(res.Body)
+
+	assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
+	assert.Contains(t, string(resBody), "context deadline exceeded")
 }
