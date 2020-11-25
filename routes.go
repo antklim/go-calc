@@ -83,16 +83,16 @@ func remoteHandler(client HTTPClient) http.HandlerFunc {
 		}
 		defer res.Body.Close()
 
-		body, err := ioutil.ReadAll(res.Body)
-		if err != nil {
+		if res.StatusCode != http.StatusOK {
+			err := fmt.Errorf("remote call failed, returned status code %d", res.StatusCode)
 			log.Println(err)
 			response := NewErrorResponse(err)
 			writeBody(w, r, response, http.StatusInternalServerError)
 			return
 		}
 
-		if res.StatusCode != http.StatusOK {
-			err := fmt.Errorf("remote call failed, returned status code %d", res.StatusCode)
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
 			log.Println(err)
 			response := NewErrorResponse(err)
 			writeBody(w, r, response, http.StatusInternalServerError)
